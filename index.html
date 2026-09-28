@@ -25,7 +25,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -79,16 +79,18 @@
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            font-size: 0.92rem;
         }
 
         th, td {
-            padding: 12px 16px;
+            padding: 10px 12px;
             border-bottom: 1px solid var(--border-color);
         }
 
         th {
             background-color: #0f172a;
             color: var(--accent-color);
+            white-space: nowrap;
         }
 
         tr:hover {
@@ -98,10 +100,11 @@
         .status-badge {
             padding: 4px 8px;
             border-radius: 4px;
-            font-size: 0.85em;
+            font-size: 0.8em;
             font-weight: bold;
             cursor: pointer;
             display: inline-block;
+            white-space: nowrap;
         }
 
         .status-pending { background-color: rgba(245, 158, 11, 0.2); color: var(--pending); border: 1px solid var(--pending); }
@@ -110,7 +113,6 @@
 
         .btn-action {
             padding: 4px 8px;
-            margin-right: 4px;
             font-size: 0.8em;
         }
 
@@ -136,27 +138,29 @@
             background: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
+            z-index: 100;
         }
 
         .modal-content {
             background: var(--card-bg);
             padding: 20px;
             border-radius: 8px;
-            width: 400px;
+            width: 450px;
             max-width: 90%;
             border: 1px solid var(--border-color);
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
+            font-size: 0.9em;
         }
 
-        .form-group input, .form-group select {
+        .form-group input {
             width: 100%;
             padding: 8px;
             border-radius: 4px;
@@ -186,6 +190,7 @@
                     <th>Date</th>
                     <th>Day</th>
                     <th>Phase</th>
+                    <th>Morning Target (7:30 AM - 8:30 AM)</th>
                     <th>Main Target (6:30 PM - 9:00 PM)</th>
                     <th>Night Target (10:00 PM - 11:30 PM)</th>
                     <th>Status</th>
@@ -216,12 +221,16 @@
             <input type="text" id="newPhase" placeholder="e.g. Revision & Mock">
         </div>
         <div class="form-group">
+            <label>Morning Target (1 Hour)</label>
+            <input type="text" id="newMorning" placeholder="Formula/Concept Revision">
+        </div>
+        <div class="form-group">
             <label>Main Target</label>
-            <input type="text" id="newMain" placeholder="Target Topic">
+            <input type="text" id="newMain" placeholder="Core Subject Topic">
         </div>
         <div class="form-group">
             <label>Night Target</label>
-            <input type="text" id="newNight" placeholder="Night Topic">
+            <input type="text" id="newNight" placeholder="Aptitude / Practice Topic">
         </div>
         <button class="btn-add" onclick="addRow()">Save</button>
         <button onclick="closeModal()">Cancel</button>
@@ -230,73 +239,73 @@
 
 <script>
     const initialData = [
-        ["28-Sep-2026","Mon","DSA & Programming","Programming in C & Python: Syntax, Variables, Control Flow, Functions","Quantitative Aptitude: Percentages & Ratios","Pending"],
-        ["29-Sep-2026","Tue","DSA & Programming","Recursion: Stack Frames, Recurrence Relations, Master Theorem","Verbal Aptitude: Grammar Basics & Spotting Errors","Pending"],
-        ["30-Sep-2026","Wed","DSA & Programming","Asymptotic Analysis: Big-O, Big-Omega, Big-Theta Notations & Space Complexity","Aptitude: Profit & Loss Practice","Pending"],
-        ["01-Oct-2026","Thu","DSA & Programming","Basic Data Structures: Arrays, Dynamic Arrays, Pointers, Strings Operations","Aptitude: Time & Work Problems","Pending"],
-        ["02-Oct-2026","Fri","DSA & Programming","Stacks & Queues: Arrays & Linked List Implementation, Standard Applications","Spatial Aptitude: Pattern Matching & Rotations","Pending"],
-        ["03-Oct-2026","Sat","DSA & Programming","Linked Lists: Singly, Doubly, Circular, Cycle Detection (Floyd's Algorithm)","Aptitude: Speed, Distance & Time","Pending"],
-        ["04-Oct-2026","Sun","DSA & Programming","WEEKLY REVIEW: DSA Code Implementation + 1 Mini Test","Weak Areas Revision + PYQs","Pending"],
-        ["05-Oct-2026","Mon","DSA & Programming","Trees: Binary Trees, Properties, Traversals (Pre, In, Post, Level-order)","Aptitude: Permutations & Combinations Basics","Pending"],
-        ["06-Oct-2026","Tue","DSA & Programming","Tree Search: Binary Search Trees (BST), AVL Trees, Insertion, Deletion, Search","Aptitude: Probability Basics","Pending"],
-        ["07-Oct-2026","Wed","DSA & Programming","Heaps: Min-Heap, Max-Heap, Priority Queues, Heapify & Heap Sort","Logical Reasoning: Blood Relations & Seating","Pending"],
-        ["08-Oct-2026","Thu","DSA & Programming","Hashing: Hash Functions, Collision Resolution (Chaining, Open Addressing)","Data Interpretation: Bar Charts & Line Graphs","Pending"],
-        ["09-Oct-2026","Fri","DSA & Programming","Sorting & Searching: Merge Sort, Quick Sort, Linear/Binary Search proofs","Logical Reasoning: Syllogisms & Statements","Pending"],
-        ["10-Oct-2026","Sat","DSA & Programming","Graphs: Adjacency Matrix/List, BFS, DFS Traversals, Shortest Paths Basics","Spatial Aptitude: Paper Folding & 3D Shapes","Pending"],
-        ["11-Oct-2026","Sun","DSA & Programming","FULL DSA REVISION: Solve 30 GATE Level PYQs on DSA","Week 2 Mock Test Analysis","Pending"],
-        ["12-Oct-2026","Mon","DBMS & Warehousing","ER Model: Entities, Attributes, Relationships, ER-to-Relational Schema","Quant Aptitude: Number Systems & Divisibility","Pending"],
-        ["13-Oct-2026","Tue","DBMS & Warehousing","Relational Model: Primary, Candidate, Super, Foreign Keys, Integrity Constraints","Verbal: Reading Comprehension Techniques","Pending"],
-        ["14-Oct-2026","Wed","DBMS & Warehousing","Relational Algebra: Select, Project, Rename, Joins, Set Operations","Quant Aptitude: Averages, Mixtures & Alligations","Pending"],
-        ["15-Oct-2026","Thu","DBMS & Warehousing","Tuple Relational Calculus (TRC) & Domain Relational Calculus (DRC)","Aptitude: Clocks & Calendars","Pending"],
-        ["16-Oct-2026","Fri","DBMS & Warehousing","SQL: DDL, DML, DQL, SELECT Queries, WHERE, GROUP BY, HAVING, ORDER BY","Spatial Aptitude: Mirror Images & Incomplete Patterns","Pending"],
-        ["17-Oct-2026","Sat","DBMS & Warehousing","SQL Advanced: Joins (Inner, Outer), Subqueries, Nested Queries, Aggregates","Quant Aptitude: Progressions (AP, GP, HP)","Pending"],
-        ["18-Oct-2026","Sun","DBMS & Warehousing","DBMS PRACTICE DAY: Solve 25 SQL & Relational Algebra GATE Questions","DBMS Short Notes Preparation","Pending"],
-        ["19-Oct-2026","Mon","DBMS & Warehousing","Functional Dependencies: Closure of Attributes, Finding Candidate Keys","Aptitude: Data Sufficiency Problems","Pending"],
-        ["20-Oct-2026","Tue","DBMS & Warehousing","Normalization: 1NF, 2NF, 3NF, BCNF Definitions & Decomposition","Logical Reasoning: Coding-Decoding & Series","Pending"],
-        ["21-Oct-2026","Wed","DBMS & Warehousing","Normalization Properties: Lossless-Join Decomposition & Dependency Preservation","DI: Pie Charts & Tabular Data","Pending"],
-        ["22-Oct-2026","Thu","DBMS & Warehousing","Data Warehousing: OLTP vs OLAP, Multidimensional Data Models","Verbal: Sentence Completion & Critical Reasoning","Pending"],
-        ["23-Oct-2026","Fri","DBMS & Warehousing","Data Warehousing Schemas: Star Schema, Snowflake Schema, OLAP Operations","DBMS + Aptitude Revision","Pending"],
-        ["24-Oct-2026","Sat","Machine Learning 1","ML Intro: Supervised vs Unsupervised, Bias-Variance Tradeoff, Overfitting/Underfitting","Quant Aptitude: Quadratic Equations & Logarithms","Pending"],
-        ["25-Oct-2026","Sun","Machine Learning 1","WEEKLY REVIEW: DBMS Full Revision + 1 Subject Test","ML Fundamentals Flashcards","Pending"],
-        ["26-Oct-2026","Mon","Machine Learning 1","Linear Regression: Normal Equation, Mean Squared Error (MSE) Loss","Aptitude: Pipes & Cisterns","Pending"],
-        ["27-Oct-2026","Tue","Machine Learning 1","Gradient Descent in ML: Batch, Stochastic (SGD), Mini-batch, Learning Rate","Logical Reasoning: Venn Diagrams","Pending"],
-        ["28-Oct-2026","Wed","Machine Learning 1","Regularization: Ridge (L2) and Lasso (L1) Regularization, Shrinkage","Quant Aptitude: Geometry & Mensuration Basics","Pending"],
-        ["29-Oct-2026","Thu","Machine Learning 1","Logistic Regression: Sigmoid Function, Cross-Entropy Loss, Decision Boundary","Verbal: Vocabulary & Synonyms/Antonyms","Pending"],
-        ["30-Oct-2026","Fri","Machine Learning 1","Decision Trees: Entropy, Information Gain, Gini Impurity, Tree Pruning","Spatial Reasoning Practice","Pending"],
-        ["31-Oct-2026","Sat","Machine Learning 1","Ensemble Methods: Bagging, Random Forests, Out-Of-Bag (OOB) Error","Quant Aptitude: Coordinate Geometry","Pending"],
-        ["01-Nov-2026","Sun","Machine Learning 1","ML PRACTICE DAY: Linear/Logistic Reg + Decision Trees PYQs","Weekly Progress Evaluation","Pending"],
-        ["02-Nov-2026","Mon","Machine Learning 1","Boosting Algorithms: AdaBoost, Gradient Boosted Decision Trees (GBDT), XGBoost","Logical Reasoning: Direction Sense","Pending"],
-        ["03-Nov-2026","Tue","Machine Learning 1","Support Vector Machines (SVM): Hard Margin, Soft Margin, C Parameter","Aptitude: Set Theory & Venn Diagrams","Pending"],
-        ["04-Nov-2026","Wed","Machine Learning 1","SVM Kernels: Linear, Polynomial, RBF Kernel, Dual Formulation","Verbal: Para Jumbles & Ordering","Pending"],
-        ["05-Nov-2026","Thu","Machine Learning 1","K-Nearest Neighbors (KNN): Distance Metrics, Choice of K, Curse of Dimensionality","Quant Aptitude: Probability Distributions Practice","Pending"],
-        ["06-Nov-2026","Fri","Machine Learning 1","Multilayer Perceptron (MLP): Feedforward Neural Networks, Activation Functions, Backpropagation","ML Supervised Learning Formula Sheet","Pending"],
-        ["07-Nov-2026","Sat","Machine Learning 2 & AI","Naive Bayes Classifier: Bayes' Theorem, Class Conditional Independence, Laplace Smoothing","DI: Combined Sets Practice","Pending"],
-        ["08-Nov-2026","Sun","Machine Learning 2 & AI","WEEKLY REVIEW: ML Supervised Learning & MLP Full PYQs","Weak Concept Deep Dive","Pending"],
-        ["09-Nov-2026","Mon","Machine Learning 2 & AI","Clustering - K-Means: Algorithm, Loss Function, Elbow Method, Silhouette Score","Logical Reasoning: Cube Cuts & Dice","Pending"],
-        ["10-Nov-2026","Tue","Machine Learning 2 & AI","Hierarchical Clustering: Single, Complete, Average Linkage, Dendrograms","Quant Aptitude: Trigonometry Basics","Pending"],
-        ["11-Nov-2026","Wed","Machine Learning 2 & AI","Dimensionality Reduction: Principal Component Analysis (PCA) Derivation & Covariance Matrix","Verbal: Idioms & Phrases","Pending"],
-        ["12-Nov-2026","Thu","Machine Learning 2 & AI","Evaluation Metrics: Confusion Matrix, Precision, Recall, F1-Score, ROC-AUC Curves","ML Unsupervised PYQs Solving","Pending"],
-        ["13-Nov-2026","Fri","Machine Learning 2 & AI","AI Uninformed Search: Breadth-First Search (BFS), Depth-First Search (DFS), Uniform Cost Search","Spatial Reasoning: Paper Cutting","Pending"],
-        ["14-Nov-2026","Sat","Machine Learning 2 & AI","AI Informed Search: Heuristics, Greedy Best-First Search, A* Search (Admissibility & Consistency)","Quant Aptitude: Inequalities","Pending"],
-        ["15-Nov-2026","Sun","Machine Learning 2 & AI","ML & SEARCH REVISION: Solve 30 GATE Level Numericals","Formula Recall Session","Pending"],
-        ["16-Nov-2026","Mon","Machine Learning 2 & AI","Adversarial Search: Game Trees, Minimax Algorithm","Logical Reasoning: Puzzles & Seating Arrangements","Pending"],
-        ["17-Nov-2026","Tue","Machine Learning 2 & AI","Alpha-Beta Pruning: Pruning Conditions & Efficiency Analysis","Verbal: Analogy & Classification","Pending"],
-        ["18-Nov-2026","Wed","Machine Learning 2 & AI","Propositional Logic: Syntax, Semantics, Truth Tables, Validity, Satisfiability","Quant Aptitude: Functions & Graphs","Pending"],
-        ["19-Nov-2026","Thu","Machine Learning 2 & AI","First-Order Logic (FOL): Quantifiers, Unification, Conjunctive Normal Form (CNF)","Aptitude Mix Practice","Pending"],
-        ["20-Nov-2026","Fri","Machine Learning 2 & AI","Logic Inference & Knowledge Representation: Resolution Rule, Semantic Networks, Frames","AI Full Formula & Rules Sheet","Pending"],
-        ["21-Nov-2026","Sat","Revision & Mock","DBMS + Data Warehousing Full Rapid Revision","DBMS GATE PYQs Sprint (20 Questions)","Pending"],
-        ["22-Nov-2026","Sun","Revision & Mock","FULL-LENGTH SUBJECT TEST 1: DSA & DBMS","Complete Test Analysis & Error Log","Pending"],
-        ["23-Nov-2026","Mon","Revision & Mock","DSA & Algorithms Rapid Revision (Trees, Graphs, Sorting)","DSA GATE PYQs Sprint (20 Questions)","Pending"],
-        ["24-Nov-2026","Tue","Revision & Mock","ML Supervised Learning + MLP Rapid Revision","ML GATE PYQs Sprint (20 Questions)","Pending"],
-        ["25-Nov-2026","Wed","Revision & Mock","ML Unsupervised Learning + Metrics Rapid Revision","ML GATE PYQs Sprint (20 Questions)","Pending"],
-        ["26-Nov-2026","Thu","Revision & Mock","AI Search + Logic & Knowledge Rep Rapid Revision","AI GATE PYQs Sprint (20 Questions)","Pending"],
-        ["27-Nov-2026","Fri","Revision & Mock","General Aptitude Full Revision (Verbal, Quant, Spatial)","Full Aptitude Mock Test","Pending"],
-        ["28-Nov-2026","Sat","Revision & Mock","FULL-LENGTH SUBJECT TEST 2: ML & AI","Test Analysis & Weak Area Fixes","Pending"],
-        ["29-Nov-2026","Sun","Revision & Mock","Leftover Topics / Buffer Clearing Day","Complete Error Log Review","Pending"],
-        ["30-Nov-2026","Mon","Revision & Mock","MILESTONE DAY: Short Notes Finalization for Dec Mock Tests","Rest & Strategy Planning for Dec/Jan","Pending"]
+        ["28-Sep-2026","Mon","DSA & Programming","C/Python Syntax Flashcards & Key Rules","Programming in C & Python: Syntax, Variables, Control Flow, Functions","Quantitative Aptitude: Percentages & Ratios","Pending"],
+        ["29-Sep-2026","Tue","DSA & Programming","Master Theorem Formulas & Recurrence Standard Cases","Recursion: Stack Frames, Recurrence Relations, Master Theorem","Verbal Aptitude: Grammar Basics & Spotting Errors","Pending"],
+        ["30-Sep-2026","Wed","DSA & Programming","Big-O Comparisons & Asymptotic Order Cheat Sheet","Asymptotic Analysis: Big-O, Big-Omega, Big-Theta Notations & Space Complexity","Aptitude: Profit & Loss Practice","Pending"],
+        ["01-Oct-2026","Thu","DSA & Programming","Array Address Calculations & Dynamic Memory Formulas","Basic Data Structures: Arrays, Dynamic Arrays, Pointers, Strings Operations","Aptitude: Time & Work Problems","Pending"],
+        ["02-Oct-2026","Fri","DSA & Programming","Stack & Queue Standard Operations Complexity Revision","Stacks & Queues: Arrays & Linked List Implementation, Standard Applications","Spatial Aptitude: Pattern Matching & Rotations","Pending"],
+        ["03-Oct-2026","Sat","DSA & Programming","Floyd's Cycle Detection Logic & Pointer Revision","Linked Lists: Singly, Doubly, Circular, Cycle Detection (Floyd's Algorithm)","Aptitude: Speed, Distance & Time","Pending"],
+        ["04-Oct-2026","Sun","DSA & Programming","Quick Recall: Week 1 Mistakes & Weak Notes","WEEKLY REVIEW: DSA Code Implementation + 1 Mini Test","Weak Areas Revision + PYQs","Pending"],
+        ["05-Oct-2026","Mon","DSA & Programming","Binary Tree Properties (Height vs Nodes Formulas)","Trees: Binary Trees, Properties, Traversals (Pre, In, Post, Level-order)","Aptitude: Permutations & Combinations Basics","Pending"],
+        ["06-Oct-2026","Tue","DSA & Programming","BST Inorder Traversal Property & AVL Rotations","Tree Search: Binary Search Trees (BST), AVL Trees, Insertion, Deletion, Search","Aptitude: Probability Basics","Pending"],
+        ["07-Oct-2026","Wed","DSA & Programming","Min/Max Heap Array Invariant Formula Revision","Heaps: Min-Heap, Max-Heap, Priority Queues, Heapify & Heap Sort","Logical Reasoning: Blood Relations & Seating","Pending"],
+        ["08-Oct-2026","Thu","DSA & Programming","Hash Functions & Probing Formula Revision","Hashing: Hash Functions, Collision Resolution (Chaining, Open Addressing)","Data Interpretation: Bar Charts & Line Graphs","Pending"],
+        ["09-Oct-2026","Fri","DSA & Programming","Sorting Algorithms Time & Space Complexity Table","Sorting & Searching: Merge Sort, Quick Sort, Linear/Binary Search proofs","Logical Reasoning: Syllogisms & Statements","Pending"],
+        ["10-Oct-2026","Sat","DSA & Programming","Graph Terms: Handshaking Lemma & Degree Formulas","Graphs: Adjacency Matrix/List, BFS, DFS Traversals, Shortest Paths Basics","Spatial Aptitude: Paper Folding & 3D Shapes","Pending"],
+        ["11-Oct-2026","Sun","DSA & Programming","Full DSA Formula & Traversal Short Notes Flash","FULL DSA REVISION: Solve 30 GATE Level PYQs on DSA","Week 2 Mock Test Analysis","Pending"],
+        ["12-Oct-2026","Mon","DBMS & Warehousing","ER Cardinalities & Participation Constraint Rules","ER Model: Entities, Attributes, Relationships, ER-to-Relational Schema","Quant Aptitude: Number Systems & Divisibility","Pending"],
+        ["13-Oct-2026","Tue","DBMS & Warehousing","Relational Key Definitions (Candidate vs Foreign)","Relational Model: Primary, Candidate, Super, Foreign Keys, Integrity Constraints","Verbal: Reading Comprehension Techniques","Pending"],
+        ["14-Oct-2026","Wed","DBMS & Warehousing","Relational Algebra Operators Syntax & Equivalence","Relational Algebra: Select, Project, Rename, Joins, Set Operations","Quant Aptitude: Averages, Mixtures & Alligations","Pending"],
+        ["15-Oct-2026","Thu","DBMS & Warehousing","Tuple & Domain Calculus Formal Quantifiers Rules","Tuple Relational Calculus (TRC) & Domain Relational Calculus (DRC)","Aptitude: Clocks & Calendars","Pending"],
+        ["16-Oct-2026","Fri","DBMS & Warehousing","SQL Execution Order (FROM -> WHERE -> GROUP BY)","SQL: DDL, DML, DQL, SELECT Queries, WHERE, GROUP BY, HAVING, ORDER BY","Spatial Aptitude: Mirror Images & Incomplete Patterns","Pending"],
+        ["17-Oct-2026","Sat","DBMS & Warehousing","SQL Join Diagrams & Correlated Subquery Logic","SQL Advanced: Joins (Inner, Outer), Subqueries, Nested Queries, Aggregates","Quant Aptitude: Progressions (AP, GP, HP)","Pending"],
+        ["18-Oct-2026","Sun","DBMS & Warehousing","SQL & Relational Algebra Tricky Edge Cases Flash","DBMS PRACTICE DAY: Solve 25 SQL & Relational Algebra GATE Questions","DBMS Short Notes Preparation","Pending"],
+        ["19-Oct-2026","Mon","DBMS & Warehousing","Functional Dependency Closure Algorithm Steps","Functional Dependencies: Closure of Attributes, Finding Candidate Keys","Aptitude: Data Sufficiency Problems","Pending"],
+        ["20-Oct-2026","Tue","DBMS & Warehousing","1NF to BCNF Normal Forms Definition Chart","Normalization: 1NF, 2NF, 3NF, BCNF Definitions & Decomposition","Logical Reasoning: Coding-Decoding & Series","Pending"],
+        ["21-Oct-2026","Wed","DBMS & Warehousing","Lossless Join & Dependency Preservation Check Tests","Normalization Properties: Lossless-Join Decomposition & Dependency Preservation","DI: Pie Charts & Tabular Data","Pending"],
+        ["22-Oct-2026","Thu","DBMS & Warehousing","OLTP vs OLAP Quick Comparison Matrix","Data Warehousing: OLTP vs OLAP, Multidimensional Data Models","Verbal: Sentence Completion & Critical Reasoning","Pending"],
+        ["23-Oct-2026","Fri","DBMS & Warehousing","Star Schema vs Snowflake Schema Key Features","Data Warehousing Schemas: Star Schema, Snowflake Schema, OLAP Operations","DBMS + Aptitude Revision","Pending"],
+        ["24-Oct-2026","Sat","Machine Learning 1","Bias-Variance Tradeoff Equations & Curve Revision","ML Intro: Supervised vs Unsupervised, Bias-Variance Tradeoff, Overfitting/Underfitting","Quant Aptitude: Quadratic Equations & Logarithms","Pending"],
+        ["25-Oct-2026","Sun","Machine Learning 1","DBMS Short Notes Quick 1-Hour Brushup","WEEKLY REVIEW: DBMS Full Revision + 1 Subject Test","ML Fundamentals Flashcards","Pending"],
+        ["26-Oct-2026","Mon","Machine Learning 1","Linear Regression Normal Equation & Loss Formula","Linear Regression: Normal Equation, Mean Squared Error (MSE) Loss","Aptitude: Pipes & Cisterns","Pending"],
+        ["27-Oct-2026","Tue","Machine Learning 1","Gradient Descent Update Equations (Batch vs SGD)","Gradient Descent in ML: Batch, Stochastic (SGD), Mini-batch, Learning Rate","Logical Reasoning: Venn Diagrams","Pending"],
+        ["28-Oct-2026","Wed","Machine Learning 1","L1 vs L2 Regularization Penalties & Norms","Regularization: Ridge (L2) and Lasso (L1) Regularization, Shrinkage","Quant Aptitude: Geometry & Mensuration Basics","Pending"],
+        ["29-Oct-2026","Thu","Machine Learning 1","Sigmoid Derivative & Binary Cross-Entropy Loss","Logistic Regression: Sigmoid Function, Cross-Entropy Loss, Decision Boundary","Verbal: Vocabulary & Synonyms/Antonyms","Pending"],
+        ["30-Oct-2026","Fri","Machine Learning 1","Entropy, Information Gain & Gini Formulas","Decision Trees: Entropy, Information Gain, Gini Impurity, Tree Pruning","Spatial Reasoning Practice","Pending"],
+        ["31-Oct-2026","Sat","Machine Learning 1","Bagging vs Boosting Concept & Variance Reduction","Ensemble Methods: Bagging, Random Forests, Out-Of-Bag (OOB) Error","Quant Aptitude: Coordinate Geometry","Pending"],
+        ["01-Nov-2026","Sun","Machine Learning 1","Regression & Decision Trees Formula Sheet Flash","ML PRACTICE DAY: Linear/Logistic Reg + Decision Trees PYQs","Weekly Progress Evaluation","Pending"],
+        ["02-Nov-2026","Mon","Machine Learning 1":"AdaBoost Weight Update Formulas","Boosting Algorithms: AdaBoost, Gradient Boosted Decision Trees (GBDT), XGBoost","Logical Reasoning: Direction Sense","Pending"],
+        ["03-Nov-2026","Tue","Machine Learning 1","SVM Margin Distance Formula & Support Vector Def","Support Vector Machines (SVM): Hard Margin, Soft Margin, C Parameter","Aptitude: Set Theory & Venn Diagrams","Pending"],
+        ["04-Nov-2026","Wed","Machine Learning 1","Kernel Function Types (RBF, Polynomial) Rules","SVM Kernels: Linear, Polynomial, RBF Kernel, Dual Formulation","Verbal: Para Jumbles & Ordering","Pending"],
+        ["05-Nov-2026","Thu","Machine Learning 1","Distance Metrics (Euclidean, Manhattan, Minkowski)","K-Nearest Neighbors (KNN): Distance Metrics, Choice of K, Curse of Dimensionality","Quant Aptitude: Probability Distributions Practice","Pending"],
+        ["06-Nov-2026","Fri","Machine Learning 1","Activation Functions (ReLU, Sigmoid, Tanh) Graphs","Multilayer Perceptron (MLP): Feedforward Neural Networks, Activation Functions, Backpropagation","ML Supervised Learning Formula Sheet","Pending"],
+        ["07-Nov-2026","Sat","Machine Learning 2 & AI","Bayes Theorem & Laplace Smoothing Equations","Naive Bayes Classifier: Bayes' Theorem, Class Conditional Independence, Laplace Smoothing","DI: Combined Sets Practice","Pending"],
+        ["08-Nov-2026","Sun","Machine Learning 2 & AI","ML Supervised Learning Formulas 1-Hour Flash","WEEKLY REVIEW: ML Supervised Learning & MLP Full PYQs","Weak Concept Deep Dive","Pending"],
+        ["09-Nov-2026","Mon","Machine Learning 2 & AI","K-Means Loss Function & Silhouette Range Rules","Clustering - K-Means: Algorithm, Loss Function, Elbow Method, Silhouette Score","Logical Reasoning: Cube Cuts & Dice","Pending"],
+        ["10-Nov-2026","Tue","Machine Learning 2 & AI","Hierarchical Clustering Distance Linkages Chart","Hierarchical Clustering: Single, Complete, Average Linkage, Dendrograms","Quant Aptitude: Trigonometry Basics","Pending"],
+        ["11-Nov-2026","Wed","Machine Learning 2 & AI","PCA Eigenvalues & Covariance Matrix Equations","Dimensionality Reduction: Principal Component Analysis (PCA) Derivation & Covariance Matrix","Verbal: Idioms & Phrases","Pending"],
+        ["12-Nov-2026","Thu","Machine Learning 2 & AI","Precision, Recall, F1, ROC-AUC Formulas Table","Evaluation Metrics: Confusion Matrix, Precision, Recall, F1-Score, ROC-AUC Curves","ML Unsupervised PYQs Solving","Pending"],
+        ["13-Nov-2026","Fri","Machine Learning 2 & AI","Search Time & Space Complexity Table (BFS/DFS)","AI Uninformed Search: Breadth-First Search (BFS), Depth-First Search (DFS), Uniform Cost Search","Spatial Reasoning: Paper Cutting","Pending"],
+        ["14-Nov-2026","Sat","Machine Learning 2 & AI","A* Heuristic Admissibility & Consistency Rules","AI Informed Search: Heuristics, Greedy Best-First Search, A* Search (Admissibility & Consistency)","Quant Aptitude: Inequalities","Pending"],
+        ["15-Nov-2026","Sun","Machine Learning 2 & AI","Unsupervised ML & AI Search Formulas Recall","ML & SEARCH REVISION: Solve 30 GATE Level Numericals","Formula Recall Session","Pending"],
+        ["16-Nov-2026","Mon","Machine Learning 2 & AI","Game Tree Evaluation & Minimax Max/Min Rules","Adversarial Search: Game Trees, Minimax Algorithm","Logical Reasoning: Puzzles & Seating Arrangements","Pending"],
+        ["17-Nov-2026","Tue","Machine Learning 2 & AI","Alpha-Beta Pruning Alpha/Beta Cutoff Conditions","Alpha-Beta Pruning: Pruning Conditions & Efficiency Analysis","Verbal: Analogy & Classification","Pending"],
+        ["18-Nov-2026","Wed","Machine Learning 2 & AI","Propositional Logic Laws & Truth Table Equivalence","Propositional Logic: Syntax, Semantics, Truth Tables, Validity, Satisfiability","Quant Aptitude: Functions & Graphs","Pending"],
+        ["19-Nov-2026","Thu","Machine Learning 2 & AI","CNF Conversion Steps & Quantifier Rules","First-Order Logic (FOL): Quantifiers, Unification, Conjunctive Normal Form (CNF)","Aptitude Mix Practice","Pending"],
+        ["20-Nov-2026","Fri","Machine Learning 2 & AI","Resolution Rule & Semantic Network Rules","Logic Inference & Knowledge Representation: Resolution Rule, Semantic Networks, Frames","AI Full Formula & Rules Sheet","Pending"],
+        ["21-Nov-2026","Sat","Revision & Mock","DBMS Key Formulas & Normalization Quick Revision","DBMS + Data Warehousing Full Rapid Revision","DBMS GATE PYQs Sprint (20 Questions)","Pending"],
+        ["22-Nov-2026","Sun","Revision & Mock","DSA + DBMS Combined Formula Sheet Review","FULL-LENGTH SUBJECT TEST 1: DSA & DBMS","Complete Test Analysis & Error Log","Pending"],
+        ["23-Nov-2026","Mon","Revision & Mock","DSA Algorithms & Trees Fast Formula Sweep","DSA & Algorithms Rapid Revision (Trees, Graphs, Sorting)","DSA GATE PYQs Sprint (20 Questions)","Pending"],
+        ["24-Nov-2026","Tue","Revision & Mock","Supervised ML Formulas Rapid Memory Check","ML Supervised Learning + MLP Rapid Revision","ML GATE PYQs Sprint (20 Questions)","Pending"],
+        ["25-Nov-2026","Wed","Revision & Mock","Unsupervised ML & Metrics Formula Rapid Sweep","ML Unsupervised Learning + Metrics Rapid Revision","ML GATE PYQs Sprint (20 Questions)","Pending"],
+        ["26-Nov-2026","Thu","Revision & Mock","AI Search Algorithms & Logic Rules Rapid Review","AI Search + Logic & Knowledge Rep Rapid Revision","AI GATE PYQs Sprint (20 Questions)","Pending"],
+        ["27-Nov-2026","Fri","Revision & Mock","Aptitude Tricks & Quick Math Formulas Sweep","General Aptitude Full Revision (Verbal, Quant, Spatial)","Full Aptitude Mock Test","Pending"],
+        ["28-Nov-2026","Sat","Revision & Mock","ML & AI Combined Formula Sheet Flash Sweep","FULL-LENGTH SUBJECT TEST 2: ML & AI","Test Analysis & Weak Area Fixes","Pending"],
+        ["29-Nov-2026","Sun","Revision & Mock","Review Mistakes Log & Personal Weak Points","Leftover Topics / Buffer Clearing Day","Complete Error Log Review","Pending"],
+        ["30-Nov-2026","Mon","Revision & Mock","Final Short Notes Index & Strategy Alignment","MILESTONE DAY: Short Notes Finalization for Dec Mock Tests","Rest & Strategy Planning for Dec/Jan","Pending"]
     ];
 
-    let scheduleData = JSON.parse(localStorage.getItem('gateSchedule')) || initialData;
+    let scheduleData = JSON.parse(localStorage.getItem('gateScheduleMorning')) || initialData;
 
     function renderTable() {
         const tbody = document.getElementById('tableBody');
@@ -305,8 +314,8 @@
         scheduleData.forEach((row, index) => {
             const tr = document.createElement('tr');
             
-            const isChecked = row[5] === 'Completed';
-            const statusClass = row[5] === 'Completed' ? 'status-completed' : (row[5] === 'In Progress' ? 'status-progress' : 'status-pending');
+            const isChecked = row[6] === 'Completed';
+            const statusClass = row[6] === 'Completed' ? 'status-completed' : (row[6] === 'In Progress' ? 'status-progress' : 'status-pending');
 
             tr.innerHTML = `
                 <td><input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleCheck(${index}, this.checked)"></td>
@@ -315,7 +324,8 @@
                 <td contenteditable="true" class="editable-cell" onblur="updateData(${index}, 2, this.innerText)">${row[2]}</td>
                 <td contenteditable="true" class="editable-cell" onblur="updateData(${index}, 3, this.innerText)">${row[3]}</td>
                 <td contenteditable="true" class="editable-cell" onblur="updateData(${index}, 4, this.innerText)">${row[4]}</td>
-                <td><span class="status-badge ${statusClass}" onclick="cycleStatus(${index})">${row[5]}</span></td>
+                <td contenteditable="true" class="editable-cell" onblur="updateData(${index}, 5, this.innerText)">${row[5]}</td>
+                <td><span class="status-badge ${statusClass}" onclick="cycleStatus(${index})">${row[6]}</span></td>
                 <td>
                     <button class="btn-action btn-delete" onclick="deleteRow(${index})">Delete</button>
                 </td>
@@ -327,15 +337,15 @@
     }
 
     function toggleCheck(index, isChecked) {
-        scheduleData[index][5] = isChecked ? 'Completed' : 'Pending';
+        scheduleData[index][6] = isChecked ? 'Completed' : 'Pending';
         renderTable();
     }
 
     function cycleStatus(index) {
-        const current = scheduleData[index][5];
-        if (current === 'Pending') scheduleData[index][5] = 'In Progress';
-        else if (current === 'In Progress') scheduleData[index][5] = 'Completed';
-        else scheduleData[index][5] = 'Pending';
+        const current = scheduleData[index][6];
+        if (current === 'Pending') scheduleData[index][6] = 'In Progress';
+        else if (current === 'In Progress') scheduleData[index][6] = 'Completed';
+        else scheduleData[index][6] = 'Pending';
         renderTable();
     }
 
@@ -363,26 +373,28 @@
         const date = document.getElementById('newDate').value || 'N/A';
         const day = document.getElementById('newDay').value || 'N/A';
         const phase = document.getElementById('newPhase').value || 'General';
+        const morning = document.getElementById('newMorning').value || 'Formula Revision';
         const main = document.getElementById('newMain').value || 'No Target';
         const night = document.getElementById('newNight').value || 'No Target';
 
-        scheduleData.push([date, day, phase, main, night, 'Pending']);
+        scheduleData.push([date, day, phase, morning, main, night, 'Pending']);
         renderTable();
         closeModal();
 
         document.getElementById('newDate').value = '';
         document.getElementById('newDay').value = '';
         document.getElementById('newPhase').value = '';
+        document.getElementById('newMorning').value = '';
         document.getElementById('newMain').value = '';
         document.getElementById('newNight').value = '';
     }
 
     function saveData() {
-        localStorage.setItem('gateSchedule', JSON.stringify(scheduleData));
+        localStorage.setItem('gateScheduleMorning', JSON.stringify(scheduleData));
     }
 
     function exportCSV() {
-        let csvContent = "data:text/csv;charset=utf-8,Date,Day,Phase,Main Target,Night Target,Status\n";
+        let csvContent = "data:text/csv;charset=utf-8,Date,Day,Phase,Morning Target,Main Target,Night Target,Status\n";
         scheduleData.forEach(row => {
             let rowStr = row.map(e => `"${e}"`).join(",");
             csvContent += rowStr + "\n";
@@ -391,7 +403,7 @@
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "GATE_DA_2026_Schedule.csv");
+        link.setAttribute("download", "GATE_DA_2026_Schedule_With_Morning.csv");
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
